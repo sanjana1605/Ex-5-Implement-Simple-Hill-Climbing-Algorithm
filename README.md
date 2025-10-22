@@ -1,6 +1,6 @@
-<h1>ExpNo 5 : Implement Simple Hill Climbing Algorithm</h1> 
-<h3>Name:             </h3>
-<h3>Register Number:             </h3>
+<h1>Exp-No 5 : Implement Simple Hill Climbing Algorithm</h1> 
+<h3>Name: Sanjana Sri N         </h3>
+<h3>Register Number: 2305003007            </h3>
 <H3>Aim:</H3>
 <p>Implement Simple Hill Climbing Algorithm and Generate a String by Mutating a Single Character at each iteration </p>
 <h2> Theory: </h2>
@@ -9,36 +9,59 @@ Feedback is provided in terms of heuristic function
 </p>
 
 
-<h2>Algorithm:</h2>
-<p>
-<ol>
- <li> Evaluate the initial state.If it is a goal state then return it and quit. Otherwise, continue with initial state as current state.</li> 
-<li>Loop until a solution is found or there are no new operators left to be applied in current state:
-<ul><li>Select an operator that has not yet been applied to the current state and apply it to produce a new state</li>
-<li>Evaluate the new state:
-  <ul>
-<li>if it is a goal state, then return it and quit</li>
-<li>if it is not a goal state but better than current state then make new state as current state</li>
-<li>if it is not better than current state then continue in the loop</li>
-    </ul>
-</li>
-</ul>
-</li>
-</ol>
+## Algorithm: Hill Climbing String Matching
 
-</p>
+1. Evaluate the initial state:
+
+    - Generate a random string of the same length as the target string.
+
+      If the random string matches the target string, stop — it is the goal state.
+ 
+      Otherwise, continue with this random string as the current state.
+
+2. Loop until the goal is found (or no improvement occurs):
+
+    - Randomly select a position in the string.
+
+    - Replace the character at that position with a random printable character.
+
+    - Evaluate the fitness (difference) between this new string and the target string.
+
+3. Evaluate the new state:
+
+    - If the new string exactly matches the target string, return it and quit (goal state reached).
+
+    - If the new string is closer (better score) to the target string than the previous best,
+      make this new string the current best (move to this state).
+
+    - If the new string is not better, discard it and continue the loop with the current state.
+
+4. Repeat the above steps until the string completely matches the target string (score = 0).
+   
 <hr>
 <h3> Steps Applied:</h3>
 <h3>Step-1</h3>
-<p> Generate Random String of the length equal to the given String</p>
+<p> Generate a random string (sol) of the same length as the target string entered by the user.
+This is the initial state.</p>
 <h3>Step-2</h3>
-<p>Mutate the randomized string each character at a time</p>
+<p>Select one random character position and mutate it — replace that character with a random printable character.
+This produces a new candidate string.</p>
 <h3>Step-3</h3>
-<p> Evaluate the fitness function or Heuristic Function</p>
-<h3>Step-4:</h3>
-<p> Lopp Step -2 and Step-3  until we achieve the score to be Zero to achieve Global Minima.</p>
+<p> Compute the fitness function (score) using:</p>
 
-## PROGRAM
+<img width="343" height="68" alt="image" src="https://github.com/user-attachments/assets/5422d120-1978-4292-b9cf-ba04f5c1c01a" />
+
+<P>for every character pair (a, b) from the candidate string and the target string.
+A smaller score means the candidate string is closer to the target.</P>
+<h3>Step-4:</h3>
+<p> If the new string has a lower score (better fit) than the current best,
+make it the new best string.
+Otherwise, continue mutating without updating.</p>
+<h3>Step-5</h3>
+<p>Repeat Steps 2–4 until the score becomes zero — meaning the generated string matches the target exactly.
+Then, print the final string and stop (global minimum reached).</p>
+
+## SAMPLE PROGRAM
 ```python
 import random
 import string
@@ -81,20 +104,49 @@ SimpleHillClimbing()
 <h2>Sample Input and Output</h2>
 <h2>Sample String:</h2> Artificial Intelligence
 <h2>Output:</h2>
-Score: 643  Solution :  8RzF:oG ]%;CPORRMe!zGvk<br>
-Score: 609  Solution :  8RzF:oG ]%;CPqRRMe!zGvk<br>
-Score: 604  Solution :  8RzF:oG ]%;CPqRRMe!zGqk<br>
-Score: 594  Solution :  8RzF:oG ]%;CPqRRWe!zGqk<br>
-Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
-Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
-Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
-Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
-Score: 551  Solution :  8RzF:oGK]%;CPqRRWe!zGqk<br>
-....................................................<br>
-..................................................<br>
-................................................<br>
-Score: 1  Solution :  Artificial Intelligencf<br>
-Score: 1  Solution :  Artificial Intelligencf<br>
-Score: 1  Solution :  Artificial Intelligencf<br>
-Score: 1  Solution :  Artificial Intelligencf<br>
-Score: 0  Solution :  Artificial Intelligence<br>
+
+<img width="1164" height="531" alt="image" src="https://github.com/user-attachments/assets/28af10cf-3585-4977-9fcd-9f0c758c10ab" />
+.
+.
+.
+.
+<img width="1155" height="504" alt="image" src="https://github.com/user-attachments/assets/444ae76f-71d3-4f73-8acd-b6320ee960a4" />
+
+## PROGRAM:
+```python
+import random, string
+
+def hill_climb():
+    target = input("Enter the target string: ")
+    sol = [random.choice(string.printable) for _ in target]
+    score = lambda s: sum(abs(ord(a) - ord(b)) for a, b in zip(s, target))
+    best, best_score = sol, score(sol)
+
+    while best_score:
+        print(best_score, "".join(best))
+        new = best.copy()
+        new[random.randrange(len(new))] = random.choice(string.printable)
+        new_score = score(new)
+        if new_score < best_score:
+            best, best_score = new, new_score
+
+    print("Final:", "".join(best))
+
+hill_climb()
+
+```
+<hr>
+<h2>Input and Output</h2>
+
+<h3> String:</h3> COMPUTER
+
+<h2>Output:</h2>
+
+<img width="923" height="485" alt="image" src="https://github.com/user-attachments/assets/f4f6e5da-9e33-49fd-982a-0cdf880c3af5" />
+
+<img width="797" height="474" alt="Screenshot 2025-10-17 133603" src="https://github.com/user-attachments/assets/532e7452-2400-4569-919d-15a0d31e38cd" />
+
+
+## RESULT:
+
+Thus the program to Implement Simple Hill Climbing Algorithm has been executed successfully.
